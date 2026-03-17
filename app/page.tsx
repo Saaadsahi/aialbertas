@@ -130,7 +130,7 @@ export default async function HomePage({
                 </h2>
                 {showCoffeeError && (
                   <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
-                    This option is not available right now.
+                    Can&apos;t accept this coffee request.
                   </p>
                 )}
                 <div className="mt-6 flex flex-wrap gap-3">
