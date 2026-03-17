@@ -1,9 +1,11 @@
 import { Nav } from "@/components/nav";
 import { MotionReveal } from "@/components/motion-reveal";
+import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
 import { getSessionUser } from "@/lib/auth/admin";
+import { containsForumLink } from "@/lib/forum";
 
 const forumLanes = [
   {
@@ -33,7 +35,7 @@ async function createForumPost(formData: FormData) {
     redirect("/forum?error=missing");
   }
 
-  if (containsLink(subject) || containsLink(body)) {
+  if (containsForumLink(subject) || containsForumLink(body)) {
     redirect("/forum?error=links");
   }
 
@@ -81,17 +83,29 @@ export default async function ForumPage({
     createOptionalServerSupabaseClient(),
   ]);
 
-  const [postsResult, commentsResult] = supabase
+  const [postsResult, commentsResult, reactionsResult] = supabase
     ? await Promise.all([
         supabase.from("forum_posts").select("*").order("created_at", { ascending: false }),
         supabase.from("forum_comments").select("id, post_id"),
+        supabase.from("forum_reactions").select("id, post_id"),
       ])
-    : [{ data: [], error: null }, { data: [], error: null }];
+    : [{ data: [], error: null }, { data: [], error: null }, { data: [], error: null }];
 
-  const posts = postsResult.data ?? [];
+  const allPosts = postsResult.data ?? [];
+  const posts = allPosts.filter((post) => post.post_type !== "cinematic_crawl");
+  const crawlPosts = allPosts
+    .filter((post) => post.post_type === "cinematic_crawl")
+    .sort((left, right) => Number(right.featured) - Number(left.featured) || right.created_at.localeCompare(left.created_at));
+  const featuredCrawl = crawlPosts.find((post) => post.featured) ?? crawlPosts[0] ?? null;
+  const recentCrawls = crawlPosts.slice(0, 4);
   const comments = commentsResult.data ?? [];
+  const reactions = reactionsResult.data ?? [];
   const commentCounts = comments.reduce<Record<string, number>>((acc, comment) => {
     acc[comment.post_id] = (acc[comment.post_id] ?? 0) + 1;
+    return acc;
+  }, {});
+  const reactionCounts = reactions.reduce<Record<string, number>>((acc, reaction) => {
+    acc[reaction.post_id] = (acc[reaction.post_id] ?? 0) + 1;
     return acc;
   }, {});
 
@@ -122,19 +136,35 @@ export default async function ForumPage({
             </p>
             <div className="mt-8 flex flex-wrap gap-3 text-sm">
               {sessionUser ? (
-                <a
-                  href="#new-post"
-                  className="rounded-full bg-black px-6 py-2 text-white hover:bg-gray-800"
-                >
-                  Start a post
-                </a>
+                <>
+                  <a
+                    href="#new-post"
+                    className="rounded-full bg-black px-6 py-2 text-white hover:bg-gray-800"
+                  >
+                    Start a post
+                  </a>
+                  <Link
+                    href="/forum/crawls/new"
+                    className="rounded-full border border-black/20 px-6 py-2 text-black hover:bg-black hover:text-white"
+                  >
+                    New transmission
+                  </Link>
+                </>
               ) : (
-                <Link
-                  href="/login?redirect=/forum"
-                  className="rounded-full bg-black px-6 py-2 text-white hover:bg-gray-800"
-                >
-                  Sign in to post
-                </Link>
+                <>
+                  <Link
+                    href="/login?redirect=/forum"
+                    className="rounded-full bg-black px-6 py-2 text-white hover:bg-gray-800"
+                  >
+                    Sign in to post
+                  </Link>
+                  <Link
+                    href="/login?redirect=/forum/crawls/new"
+                    className="rounded-full border border-black/20 px-6 py-2 text-black hover:bg-black hover:text-white"
+                  >
+                    Sign in for transmission
+                  </Link>
+                </>
               )}
               <Link
                 href="/community"
@@ -165,6 +195,92 @@ export default async function ForumPage({
                   </p>
                 </MotionReveal>
               ))}
+            </div>
+          </MotionReveal>
+        </div>
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+          <MotionReveal as="section" delayMs={120}>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">Featured transmission</p>
+                <h2 className="mt-2 font-display text-3xl tracking-tight text-black">Ai Alberta Transmission</h2>
+              </div>
+              {featuredCrawl && (
+                <Link
+                  href={`/forum/crawls/${featuredCrawl.id}`}
+                  className="rounded-full border border-black/20 px-5 py-2 text-sm text-black hover:bg-black hover:text-white"
+                >
+                  Open transmission
+                </Link>
+              )}
+            </div>
+            {featuredCrawl ? (
+              <div className="mt-5">
+                <CinematicCrawlPlayer
+                  title={featuredCrawl.crawl_title || "Ai Alberta Transmission"}
+                  episode={featuredCrawl.subject}
+                  body={featuredCrawl.body}
+                  duration={featuredCrawl.crawl_duration}
+                  tilt={Number(featuredCrawl.crawl_tilt)}
+                  fontSize={featuredCrawl.crawl_font_size}
+                  showStars={featuredCrawl.crawl_show_stars}
+                  className="min-h-[38rem]"
+                />
+              </div>
+            ) : (
+              <div className="mt-5 rounded-[28px] border border-black/10 bg-[#f8f6f1] px-6 py-12 text-center">
+                <p className="text-sm text-black">No cinematic crawls published yet.</p>
+                <p className="mt-2 text-xs text-muted">The first transmission will surface here automatically.</p>
+              </div>
+            )}
+          </MotionReveal>
+
+          <MotionReveal as="section" delayMs={180}>
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-3xl tracking-tight text-black">Recent transmissions</h2>
+              <p className="text-xs text-muted">{crawlPosts.length} total</p>
+            </div>
+            <div className="mt-5 space-y-4">
+              {recentCrawls.map((crawl, index) => (
+                <MotionReveal
+                  key={crawl.id}
+                  as="article"
+                  className="rounded-[28px] border border-black/10 bg-black p-5 text-white shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
+                  delayMs={220 + index * 70}
+                  variant="soft"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#f4d05a]">
+                        {crawl.status === "draft" ? "Private draft" : "Published"} transmission
+                      </p>
+                      <h3 className="mt-2 font-display text-3xl tracking-tight text-white">
+                        {crawl.crawl_title || "Ai Alberta Transmission"}
+                      </h3>
+                      <p className="mt-2 text-sm text-white/70">{crawl.subject}</p>
+                    </div>
+                    <p className="text-xs text-white/50">{new Date(crawl.created_at).toLocaleDateString()}</p>
+                  </div>
+                  <p className="mt-4 line-clamp-3 text-sm leading-7 text-white/72">{crawl.body}</p>
+                  <div className="mt-5 flex flex-wrap items-center gap-3 text-xs">
+                    <Link
+                      href={`/forum/crawls/${crawl.id}`}
+                      className="rounded-full border border-white/15 px-4 py-1.5 text-white hover:border-[#f4d05a] hover:text-[#f4d05a]"
+                    >
+                      Replay transmission
+                    </Link>
+                    <span className="text-white/50">+{commentCounts[crawl.id] ?? 0} comments</span>
+                    <span className="text-white/50">{reactionCounts[crawl.id] ?? 0} reactions</span>
+                  </div>
+                </MotionReveal>
+              ))}
+              {recentCrawls.length === 0 && (
+                <div className="rounded-[28px] border border-black/10 bg-white px-6 py-12 text-center">
+                  <p className="text-sm text-black">No transmissions yet.</p>
+                  <p className="mt-1 text-xs text-muted">Use the transmission builder to publish the first crawl.</p>
+                </div>
+              )}
             </div>
           </MotionReveal>
         </div>
@@ -272,8 +388,4 @@ export default async function ForumPage({
       </div>
     </main>
   );
-}
-
-function containsLink(value: string) {
-  return /(https?:\/\/|www\.|[a-z0-9-]+\.(com|ca|org|net|io|co|app|dev|ai|gg|ly|me|edu)\b)/i.test(value);
 }
