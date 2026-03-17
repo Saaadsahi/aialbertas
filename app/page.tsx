@@ -2,27 +2,8 @@ import { Nav } from "@/components/nav";
 import { MotionReveal } from "@/components/motion-reveal";
 import { SplitHeroTitle } from "@/components/split-hero-title";
 import { getSessionUser } from "@/lib/auth/admin";
-import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-
-const workflow = [
-  {
-    step: "01",
-    title: "Signal",
-    body: "You bring a stuck process, messy workflow, or idea that needs shape."
-  },
-  {
-    step: "02",
-    title: "Design",
-    body: "We map the smallest practical AI system that solves the problem cleanly."
-  },
-  {
-    step: "03",
-    title: "Ship",
-    body: "Automation, app, or architecture goes live with clear ownership and cost control."
-  }
-];
 
 const mediaMentions = [
   {
@@ -35,59 +16,53 @@ const mediaMentions = [
   }
 ];
 
-async function submitCoffeeChat(formData: FormData) {
-  "use server";
-
-  const coffeePick = String(formData.get("coffee_pick") ?? "");
-  if (coffeePick !== "coffee_on_you" && coffeePick !== "coffee_on_me") {
-    redirect("/?coffee=error");
+const faqItems = [
+  {
+    question: "What is AI automation?",
+    answer:
+      "AI automation uses artificial intelligence to automate repetitive tasks like customer service, data processing, workflow management, and reporting."
+  },
+  {
+    question: "What does AI consulting in Alberta look like?",
+    answer:
+      "AI consulting starts with identifying one practical workflow or product opportunity, then mapping the smallest system that can deliver measurable value."
+  },
+  {
+    question: "What kind of AI development does AIAlberta provide?",
+    answer:
+      "AIAlberta builds AI apps, internal copilots, automation workflows, and technical architecture for Alberta businesses that want clear, shippable results."
   }
+];
 
-  const supabase = await createOptionalServerSupabaseClient();
-  if (!supabase) {
-    redirect("/?coffee=config");
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer
+    }
+  }))
+};
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://aialbertas.com"
   }
+};
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect(`/login?redirect=${encodeURIComponent("/")}`);
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, email")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const { error } = await supabase.from("coffee_chats").insert({
-    user_id: user.id,
-    full_name: profile?.full_name ?? user.user_metadata?.full_name ?? null,
-    email: profile?.email ?? user.email ?? null,
-    coffee_pick: coffeePick,
-  });
-
-  if (error) {
-    redirect("/?coffee=error");
-  }
-
-  redirect("/?coffee=sent");
-}
-
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ coffee?: string }>;
-}) {
+export default async function HomePage() {
   const user = await getSessionUser();
-  const params = await searchParams;
   const formattedName = formatDisplayName(user?.full_name ?? user?.email?.split("@")[0] ?? null);
-  const coffeeStatus = params.coffee;
 
   return (
     <main className="bg-white text-black">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Nav />
       <section className="relative overflow-hidden border-b border-black/10 bg-[linear-gradient(180deg,#ffffff_0%,#fafaf8_100%)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(0,0,0,0.06),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(193,154,107,0.16),_transparent_34%)]" />
@@ -147,38 +122,21 @@ export default async function HomePage({
                   <br />
                   Wanna build stuff?
                 </h2>
-                {coffeeStatus === "sent" && (
-                  <p className="mt-5 rounded-xl border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-800">
-                    Coffee request saved.
-                  </p>
-                )}
-                {coffeeStatus === "error" && (
-                  <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
-                    Could not save that coffee request.
-                  </p>
-                )}
-                {coffeeStatus === "config" && (
-                  <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-                    Supabase is not configured, so coffee requests cannot be saved yet.
-                  </p>
-                )}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
-                    href="/contact"
+                    href="/contact?coffee=on-me"
                     className="hero-panel-rise rounded-full border border-green-200 bg-green-50 px-6 py-2 text-sm text-green-800 hover:bg-green-100"
                     style={{ animationDelay: "120ms" }}
                   >
                     Coffee on me
                   </Link>
-                  <form action={submitCoffeeChat} className="hero-panel-rise" style={{ animationDelay: "220ms" }}>
-                    <input type="hidden" name="coffee_pick" value="coffee_on_you" />
-                    <button
-                      type="submit"
-                      className="rounded-full border border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 hover:bg-red-100"
-                    >
-                      Coffee on you
-                    </button>
-                  </form>
+                  <Link
+                    href="/contact?coffee=on-you"
+                    className="hero-panel-rise rounded-full border border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 hover:bg-red-100"
+                    style={{ animationDelay: "220ms" }}
+                  >
+                    Coffee on you
+                  </Link>
                 </div>
               </div>
 
@@ -256,6 +214,36 @@ export default async function HomePage({
                   {item.title}
                 </p>
               </Link>
+            ))}
+          </div>
+        </div>
+      </MotionReveal>
+
+      <MotionReveal as="section" className="border-t border-black/10 bg-[#faf8f3] py-16" delayMs={120}>
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">FAQ</p>
+            <h2 className="mt-3 font-display text-3xl tracking-tight text-black sm:text-4xl">
+              Answers for search, AI assistants, and real people
+            </h2>
+            <p className="mt-4 text-sm text-muted sm:text-base">
+              Clear explanations help search engines and answer engines understand what AIAlberta does and who it serves.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4">
+            {faqItems.map((item, index) => (
+              <MotionReveal
+                key={item.question}
+                className="rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)]"
+                delayMs={160 + index * 80}
+                variant="soft"
+              >
+                <h3 className="font-display text-2xl tracking-tight text-black">{item.question}</h3>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-muted sm:text-base">
+                  {item.answer}
+                </p>
+              </MotionReveal>
             ))}
           </div>
         </div>

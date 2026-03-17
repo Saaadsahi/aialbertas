@@ -38,11 +38,17 @@ async function submitInquiry(formData: FormData) {
 export default async function ContactPage({
   searchParams
 }: {
-  searchParams: Promise<{ sent?: string; error?: string }>;
+  searchParams: Promise<{ sent?: string; error?: string; coffee?: string }>;
 }) {
   const params = await searchParams;
   const isConfigured = hasSupabaseEnv();
   const isSent = params.sent === "1";
+  const coffeeMessage =
+    params.coffee === "on-me"
+      ? "Coffee on me selected. Leave your details and we will set it up."
+      : params.coffee === "on-you"
+        ? "Coffee on you selected. Leave your details and we will follow up."
+        : undefined;
   const errorMessage =
     params.error === "config"
       ? "Contact form storage is not configured yet. Use the email link below for now."
@@ -63,6 +69,11 @@ export default async function ContactPage({
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
           <MotionReveal as="form" action={submitInquiry} className="space-y-4 text-sm text-black" delayMs={140}>
+            {coffeeMessage && (
+              <p className="rounded-xl border border-black/10 bg-[#f7f4ef] px-3 py-2 text-xs text-black">
+                {coffeeMessage}
+              </p>
+            )}
             {isSent && (
               <p className="rounded-xl border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-800">
                 Inquiry received. We&apos;ll follow up shortly.
