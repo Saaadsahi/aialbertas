@@ -53,9 +53,15 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams
+}: {
+  searchParams: Promise<{ coffeeError?: string }>;
+}) {
+  const params = await searchParams;
   const user = await getSessionUser();
   const formattedName = formatDisplayName(user?.full_name ?? user?.email?.split("@")[0] ?? null);
+  const showCoffeeError = params.coffeeError === "1";
 
   return (
     <main className="bg-white text-black">
@@ -122,6 +128,11 @@ export default async function HomePage() {
                   <br />
                   Wanna build stuff?
                 </h2>
+                {showCoffeeError && (
+                  <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                    This option is not available right now.
+                  </p>
+                )}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
                     href="/contact?coffee=on-me"
@@ -131,7 +142,7 @@ export default async function HomePage() {
                     Coffee on me
                   </Link>
                   <Link
-                    href="/contact?coffee=on-you"
+                    href="/?coffeeError=1"
                     className="hero-panel-rise rounded-full border border-red-200 bg-red-50 px-6 py-2 text-sm text-red-700 hover:bg-red-100"
                     style={{ animationDelay: "220ms" }}
                   >
