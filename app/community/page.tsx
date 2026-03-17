@@ -93,33 +93,6 @@ export default async function CommunityPage() {
           </div>
         </MotionReveal>
 
-        <MotionReveal className="mt-16 rounded-[32px] border border-black/10 bg-[linear-gradient(180deg,#fafaf8_0%,#ffffff_100%)] p-8" delayMs={220} variant="soft">
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted">Event</p>
-          <h2 className="mt-4 font-display text-3xl tracking-tight text-black sm:text-5xl">
-            Post
-          </h2>
-          <p className="mt-3 text-base text-black/80 sm:text-lg">
-            Wanna host an event?
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/contact"
-              className="rounded-full border border-black/15 bg-black px-6 py-2 text-sm text-white hover:bg-gray-800"
-            >
-              Yes
-            </Link>
-            <Link
-              href="/contact"
-              className="rounded-full border border-black/20 px-6 py-2 text-sm text-black hover:bg-black hover:text-white"
-            >
-              Yes
-            </Link>
-          </div>
-          <p className="mt-8 text-sm text-muted">
-            Official tech meetups coming soon.
-          </p>
-        </MotionReveal>
-
         <div className="mt-16">
           <MotionReveal as="p" className="font-mono text-xs uppercase tracking-[0.25em] text-muted" delayMs={260}>Connect</MotionReveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -148,6 +121,33 @@ export default async function CommunityPage() {
             ))}
           </div>
         </div>
+
+        <MotionReveal className="mt-16 rounded-[32px] border border-black/10 bg-[linear-gradient(180deg,#fafaf8_0%,#ffffff_100%)] p-8" delayMs={220} variant="soft">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted">Event</p>
+          <h2 className="mt-4 font-display text-3xl tracking-tight text-black sm:text-5xl">
+            Post
+          </h2>
+          <p className="mt-3 text-base text-black/80 sm:text-lg">
+            Wanna host an event?
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/contact"
+              className="rounded-full border border-black/15 bg-black px-6 py-2 text-sm text-white hover:bg-gray-800"
+            >
+              Yes
+            </Link>
+            <Link
+              href="/contact"
+              className="rounded-full border border-black/20 px-6 py-2 text-sm text-black hover:bg-black hover:text-white"
+            >
+              Yes
+            </Link>
+          </div>
+          <p className="mt-8 text-sm text-muted">
+            Official tech meetups coming soon.
+          </p>
+        </MotionReveal>
       </div>
     </main>
   );

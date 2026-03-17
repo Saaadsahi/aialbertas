@@ -15,7 +15,8 @@ const serviceOptions = [
   "Automation Workflow",
   "Custom AI App",
   "AI Architecture",
-  "Vibe Code Cleanup"
+  "Vibe Code Cleanup",
+  "Event Hosting"
 ] as const;
 
 export function ContactEmailForm({
