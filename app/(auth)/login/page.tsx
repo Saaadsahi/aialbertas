@@ -98,13 +98,20 @@ export default async function LoginPage({
             Sign In
           </button>
         </form>
-        <p className="mt-4 text-xs text-muted">
-          Need an account?{" "}
-          <Link href="/signup" className="text-black underline">
-            Create one
+        <div className="mt-5 rounded-2xl border border-black/10 bg-[#f7f4ef] px-4 py-3">
+          <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-muted">
+            New here?
+          </p>
+          <p className="mt-2 text-sm text-black">
+            Sign up or create your account to join AiAlberta.
+          </p>
+          <Link
+            href="/signup"
+            className="mt-3 inline-flex items-center rounded-full border border-black/20 bg-white px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white"
+          >
+            Create account
           </Link>
-          .
-        </p>
+        </div>
         <Link href="/" className="mt-6 inline-block text-xs text-muted underline">
           Back to site
         </Link>
