@@ -7,6 +7,9 @@ type ContactEmailFormProps = {
   errorMessage?: string;
 };
 
+const CONTACT_EMAIL_ENDPOINT =
+  "https://cvzdxykvkklxgcjaqdlm.supabase.co/functions/v1/contact-email";
+
 const serviceOptions = [
   "General Inquiry",
   "Automation Workflow",
@@ -23,25 +26,51 @@ export function ContactEmailForm({
   const [email, setEmail] = useState("");
   const [serviceType, setServiceType] = useState<(typeof serviceOptions)[number]>("General Inquiry");
   const [message, setMessage] = useState("");
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!name.trim() || !email.trim() || !message.trim()) {
+      setSubmitState("error");
+      setSubmitMessage("Please fill in your name, email, and message.");
       return;
     }
 
-    const subject = `AIAlberta inquiry: ${serviceType}`;
-    const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Service: ${serviceType}`,
-      "",
-      "Message:",
-      message
-    ].join("\n");
+    setSubmitState("sending");
+    setSubmitMessage(null);
 
-    window.location.href = `mailto:saadullahsahi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    try {
+      const response = await fetch(CONTACT_EMAIL_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          serviceType,
+          message
+        })
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || (data && "error" in data)) {
+        throw new Error("Failed to send inquiry.");
+      }
+
+      setSubmitState("sent");
+      setSubmitMessage("Inquiry sent. We'll follow up shortly.");
+      setName("");
+      setEmail("");
+      setServiceType("General Inquiry");
+      setMessage("");
+    } catch {
+      setSubmitState("error");
+      setSubmitMessage("Could not send your inquiry right now.");
+    }
   }
 
   return (
@@ -54,6 +83,16 @@ export function ContactEmailForm({
       {errorMessage && (
         <p className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
           {errorMessage}
+        </p>
+      )}
+      {submitState === "sent" && submitMessage && (
+        <p className="rounded-xl border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-800">
+          {submitMessage}
+        </p>
+      )}
+      {submitState === "error" && submitMessage && (
+        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+          {submitMessage}
         </p>
       )}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -108,9 +147,10 @@ export function ContactEmailForm({
       </div>
       <button
         type="submit"
+        disabled={submitState === "sending"}
         className="inline-flex items-center justify-center rounded-full bg-black px-6 py-2 text-sm text-white hover:bg-gray-800"
       >
-        Send email
+        {submitState === "sending" ? "Sending..." : "Send inquiry"}
       </button>
     </form>
   );
