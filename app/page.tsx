@@ -1,4 +1,5 @@
 import { Nav } from "@/components/nav";
+import { CoffeeErrorNote } from "@/components/coffee-error-note";
 import { MotionReveal } from "@/components/motion-reveal";
 import { SplitHeroTitle } from "@/components/split-hero-title";
 import { getSessionUser } from "@/lib/auth/admin";
@@ -128,11 +129,7 @@ export default async function HomePage({
                   <br />
                   Wanna build stuff?
                 </h2>
-                {showCoffeeError && (
-                  <p className="mt-5 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
-                    Can&apos;t accept this coffee request.
-                  </p>
-                )}
+                {showCoffeeError && <CoffeeErrorNote />}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
                     href="/contact?coffee=on-me"
