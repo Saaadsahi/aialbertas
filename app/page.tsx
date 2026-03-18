@@ -19,9 +19,9 @@ const mediaMentions = [
 
 const faqItems = [
   {
-    question: "What is AI automation?",
+    question: "What does AIAlberta do?",
     answer:
-      "AI automation uses artificial intelligence to automate repetitive tasks like customer service, data processing, workflow management, and reporting."
+      "AIAlberta fixes broken software, builds automated websites and workflows, generates AI-powered leads, integrates AI into business operations, and helps Alberta teams with almost any practical tech need."
   },
   {
     question: "What does AI consulting in Alberta look like?",
@@ -81,20 +81,20 @@ export default async function HomePage({
               </MotionReveal>
             )}
             <MotionReveal as="p" className="font-mono text-xs uppercase tracking-[0.3em] text-muted" delayMs={80}>
-              Alberta&apos;s certified AI community
+              Built in Alberta. Built for Alberta.
             </MotionReveal>
             <SplitHeroTitle
               className="mt-4 font-display text-[48px] leading-none tracking-tight text-black sm:text-[80px] lg:text-[112px]"
               lines={[
-                "AI FOR",
-                "EVERYONE.",
-                "NO ONE LEFT BEHIND.",
+                "911 FOR",
+                "YOUR TECH",
+                "NEEDS.",
               ]}
             />
             <MotionReveal as="p" className="mt-6 max-w-xl text-sm text-muted sm:text-base" delayMs={220}>
-              We build automation, intelligent apps, and AI architecture for
-              Alberta businesses of every size. 9+ projects delivered. 80%
-              cost reduction guaranteed through certified AI architects.
+              We fix broken workflows, rescue stuck projects, build automated systems,
+              and help accelerate AI in Alberta. AIAlberta is here to make Alberta a sharper
+              hub for practical AI, with one mission: no one left behind.
             </MotionReveal>
             <MotionReveal className="mt-8 flex flex-wrap gap-4 text-xs sm:text-sm" delayMs={280}>
               <Link
@@ -115,6 +115,7 @@ export default async function HomePage({
               <span className="rounded-full border border-black/10 bg-white/80 px-3 py-2">AI Apps</span>
               <span className="rounded-full border border-black/10 bg-white/80 px-3 py-2">Architecture</span>
               <span className="rounded-full border border-black/10 bg-white/80 px-3 py-2">Cleanup</span>
+              <span className="rounded-full border border-red-200 bg-red-50 px-3 py-2 text-red-700">No one left behind</span>
             </MotionReveal>
           </div>
 
@@ -151,18 +152,18 @@ export default async function HomePage({
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <div className="hero-panel-rise rounded-[28px] border border-black/10 bg-black p-5 text-white" style={{ animationDelay: "320ms" }}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
-                    Simple start
+                    Alberta mission
                   </p>
                   <p className="mt-3 text-sm leading-6 text-white/80">
-                    No decks, no ceremony. Just a practical conversation about what you want to build.
+                    Built in Alberta. Built for Alberta. We show up when the workflow breaks, the stack gets messy, or the project stalls.
                   </p>
                 </div>
                 <div className="hero-panel-rise rounded-[28px] border border-black/10 bg-[#f4ede4] p-5" style={{ animationDelay: "420ms" }}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/60">
-                    Best fit
+                    Why people call us
                   </p>
                   <p className="mt-3 text-sm leading-6 text-black/80">
-                    Early ideas, messy workflows, stuck projects, and teams that want a sharp first move.
+                    Broken software, messy automations, AI lead systems, site fixes, integrations, and any general tech need that has to work.
                   </p>
                 </div>
               </div>
