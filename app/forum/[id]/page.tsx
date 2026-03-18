@@ -2,8 +2,9 @@ import { Nav } from "@/components/nav";
 import { MotionReveal } from "@/components/motion-reveal";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
+import { createOptionalServerSupabaseClient, createServerSupabaseClient } from "@/lib/supabase/server";
 import { getSessionUser } from "@/lib/auth/admin";
+import { formatForumName } from "@/lib/forum";
 
 async function createForumComment(formData: FormData) {
   "use server";
@@ -19,10 +20,7 @@ async function createForumComment(formData: FormData) {
     redirect(`/forum/${postId}?error=links`);
   }
 
-  const supabase = await createOptionalServerSupabaseClient();
-  if (!supabase) {
-    redirect(`/forum/${postId}?error=config`);
-  }
+  const supabase = await createServerSupabaseClient();
 
   const {
     data: { user },
@@ -42,9 +40,11 @@ async function createForumComment(formData: FormData) {
     redirect(`/forum/${postId}?error=banned`);
   }
 
-  const displayName = profile?.full_name ?? user.user_metadata?.full_name ?? "Member";
+  const displayName = formatForumName(
+    profile?.full_name ?? user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "Member"
+  );
 
-  await supabase.from("profiles").upsert(
+  const { error: profileError } = await supabase.from("profiles").upsert(
     {
       id: user.id,
       email: user.email ?? null,
@@ -52,6 +52,10 @@ async function createForumComment(formData: FormData) {
     },
     { onConflict: "id" }
   );
+
+  if (profileError) {
+    redirect(`/forum/${postId}?error=profile`);
+  }
 
   const { error } = await supabase.from("forum_comments").insert({
     post_id: postId,
@@ -137,6 +141,8 @@ export default async function ForumThreadPage({
         ? "Links are not allowed in comments. Send us an email instead."
         : query.error === "submit"
           ? "We could not save your comment right now."
+          : query.error === "profile"
+            ? "We could not prepare your profile for commenting."
           : query.error === "banned"
             ? "Your account is currently banned from commenting."
           : query.error === "config"

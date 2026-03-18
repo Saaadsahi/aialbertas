@@ -59,11 +59,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${displayFont.variable} ${sansFont.variable} ${monoFont.variable}`}>
-      <body className="bg-white text-black antialiased">
+      <body className="canada-proud bg-white text-black antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        <div aria-hidden="true" className="canada-ribbon" />
+        <div aria-hidden="true" className="canada-frame canada-frame-left" />
+        <div aria-hidden="true" className="canada-frame canada-frame-right" />
+        <div aria-hidden="true" className="canada-leaf canada-leaf-top" />
+        <div aria-hidden="true" className="canada-leaf canada-leaf-bottom" />
         {children}
       </body>
     </html>
