@@ -67,19 +67,13 @@ export default async function CommunityPage() {
         </MotionReveal>
 
         <MotionReveal className="mt-16 rounded-[32px] border border-black/10 bg-black p-6 text-white" delayMs={180}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.25em] text-white/50">Forum</p>
               <h2 className="mt-3 font-display text-3xl tracking-tight sm:text-5xl">
                 What people are saying
               </h2>
             </div>
-            <Link
-              href="/forum"
-              className="rounded-full border border-white/20 px-5 py-2 text-sm text-white hover:bg-white hover:text-black"
-            >
-              Open forum
-            </Link>
           </div>
 
           <div className="mt-8 rounded-[28px] border border-white/10 bg-white/5 p-5">
