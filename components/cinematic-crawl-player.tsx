@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type CinematicCrawlPlayerProps = {
   title: string;
@@ -27,6 +27,8 @@ export function CinematicCrawlPlayer({
 }: CinematicCrawlPlayerProps) {
   const [isPaused, setIsPaused] = useState(!autoPlay);
   const [replayKey, setReplayKey] = useState(0);
+  const [hasEnded, setHasEnded] = useState(false);
+  const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const starField = useMemo(() => {
     return Array.from({ length: 36 }, (_, index) => ({
@@ -38,6 +40,35 @@ export function CinematicCrawlPlayer({
     }));
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  function clearRestartTimeout() {
+    if (restartTimeoutRef.current) {
+      clearTimeout(restartTimeoutRef.current);
+      restartTimeoutRef.current = null;
+    }
+  }
+
+  function restartCrawl() {
+    clearRestartTimeout();
+    setHasEnded(false);
+    setReplayKey((current) => current + 1);
+  }
+
+  function scheduleRestart() {
+    clearRestartTimeout();
+    restartTimeoutRef.current = setTimeout(() => {
+      setHasEnded(false);
+      setReplayKey((current) => current + 1);
+    }, 3000);
+  }
+
   return (
     <section className={`crawl-stage rounded-[32px] border border-[#f4d05a]/20 bg-black ${className}`}>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4 text-xs text-white/75">
@@ -48,7 +79,19 @@ export function CinematicCrawlPlayer({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setIsPaused((current) => !current)}
+            onClick={() => {
+              setIsPaused((current) => {
+                const next = !current;
+
+                if (next) {
+                  clearRestartTimeout();
+                } else if (hasEnded) {
+                  restartCrawl();
+                }
+
+                return next;
+              });
+            }}
             className="rounded-full border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-white/85 hover:border-[#f4d05a] hover:text-[#f4d05a]"
           >
             {isPaused ? "Play" : "Pause"}
@@ -56,7 +99,7 @@ export function CinematicCrawlPlayer({
           <button
             type="button"
             onClick={() => {
-              setReplayKey((current) => current + 1);
+              restartCrawl();
               setIsPaused(false);
             }}
             className="rounded-full border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-white/85 hover:border-[#f4d05a] hover:text-[#f4d05a]"
@@ -90,6 +133,12 @@ export function CinematicCrawlPlayer({
         <div
           key={replayKey}
           className={`crawl-motion ${isPaused ? "is-paused" : ""}`}
+          onAnimationEnd={() => {
+            setHasEnded(true);
+            if (!isPaused) {
+              scheduleRestart();
+            }
+          }}
           style={
             {
               "--crawl-duration": `${duration}s`,

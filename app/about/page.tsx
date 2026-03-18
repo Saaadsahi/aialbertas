@@ -2,35 +2,75 @@ import { Nav } from "@/components/nav";
 import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
 import { MotionReveal } from "@/components/motion-reveal";
 
-const transmissionStory = `The Guy Who Fixed Things
+const transmissionStory = `I did not wake up one day and decide to become the guy who fixes things. It just happened slowly, like small moments stacking on top of each other.
 
-Saad never planned to become the guy who fixes things. It just sort of happened.
+At first it was nothing serious. A friend messaged me saying his website was not loading. Another one could not log into his account. Someone else said their system worked yesterday but today everything was broken. I did not even know all the answers, but I always said the same thing, let me check.
 
-One day someone couldn't log into their website. Another day someone's email wasn't working. Then someone's database broke at midnight. For some reason, Saad was always the person people called. Not because he had all the answers, but because he was curious enough to figure them out.
+I would sit there, staring at the screen, reading errors that made no sense. Lines of code, random numbers, failed requests. It felt like the system was speaking another language. But I stayed. I kept clicking, testing, searching, trying again. And then suddenly, something would work.
 
-He grew up the kind of person who pressed every button just to see what would happen. Computers, websites, servers, code, AI tools - if something existed, Saad wanted to open it up and see how it worked. Sometimes things broke. Actually... a lot of things broke. But every broken thing became a puzzle.
+That moment felt different. Quiet, but powerful.
 
-Soon he realized something interesting: most people weren't bad with technology. They were just stuck.
+Over time, more people started coming to me. Not because I was the best, but because I did not give up. People had problems, real ones. A business that could not take payments. A website that crashed during a launch. A tool that was supposed to save time but instead wasted hours.
 
-A business owner couldn't connect their software. A startup founder couldn't automate their workflow. A website worked perfectly on a developer's laptop but completely died when it went live.
+To them it was stress. To me it was a puzzle.
 
-To Saad, these weren't disasters. They were mysteries.
+I started seeing patterns. Most things were not actually broken forever. They were just misunderstood. A wrong key. A missing connection. One small mistake hidden inside something big.
 
-He started building things. Small tools first. Then bigger ones. AI systems. Websites. Automation scripts. Databases that tracked everything from payments to users. Sometimes he would sit for hours staring at an error message that made absolutely no sense.
+So I kept building. Small projects turned into bigger ones. I started working with AI, automation, databases, full systems from start to end. Sometimes I created things that worked perfectly. Sometimes I created things that completely failed.
 
-But when the system finally worked - when the site went live, when the automation ran perfectly, when someone messaged him saying "it works now!" - that was the moment he loved.
+Those failures taught me the most.
 
-Because behind every broken system was a person just trying to make something work.
+Late nights became normal. Sitting alone with a screen, trying to fix something no one else could see. It felt like being inside the system itself, moving through it, understanding it piece by piece.
 
-And somehow Saad always ended up being the guy who figured it out.
+And then came the moments I will always remember.
 
-Not because he was the smartest person in the room.
+When someone said, it works now.
 
-But because he never stopped asking one simple question:
+When a business started running smoothly again.
 
-"Okay... but why is it broken?"
+When something that was broken, confusing, stressful suddenly became simple.
 
-And once you ask that question long enough... eventually you find the answer.`;
+That is when I realized what I actually do.
+
+I do not just write code.
+
+I help people move forward.
+
+Behind every error message is a person trying to build something. Behind every broken system is someone who believed it would work.
+
+And somehow, I became the person who steps in when it does not.
+
+Not because I know everything.
+
+But because I am willing to sit with the problem longer than anyone else.
+
+I ask questions most people ignore.
+
+I go deeper when others stop.
+
+And I stay until it works.
+
+Even now, every time I open my laptop, I know something will go wrong. Something always does. But instead of seeing it as a problem, I see it as the beginning of a story.
+
+A system breaks.
+
+A question appears.
+
+And I start again.
+
+Trying to understand.
+
+Trying to fix.
+
+Trying to make it work.
+
+Because at the end of it all, that is who I am.
+
+The guy who shows up when things stop working
+
+and leaves only when they do.
+
+-------THE END-----------------------------`;
 
 export default function AboutPage() {
   return (
