@@ -67,9 +67,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div aria-hidden="true" className="canada-ribbon" />
         <div aria-hidden="true" className="canada-frame canada-frame-left" />
         <div aria-hidden="true" className="canada-frame canada-frame-right" />
-        <div aria-hidden="true" className="canada-pattern" />
         <div aria-hidden="true" className="canada-leaf canada-leaf-top" />
-        <div aria-hidden="true" className="canada-leaf canada-leaf-bottom" />
         {children}
       </body>
     </html>
