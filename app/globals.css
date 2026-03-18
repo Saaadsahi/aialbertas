@@ -54,6 +54,22 @@ body {
   right: 0;
 }
 
+.canada-leaf {
+  position: fixed;
+  z-index: 1;
+  width: 1.4rem;
+  height: 1.4rem;
+  pointer-events: none;
+  opacity: 0.95;
+  background: no-repeat center/contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ff0000' d='M256 24l40.6 81.9 90.4-22.6-22.6 90.4L488 214.3l-81.9 40.6 22.6 90.4-90.4-22.6L297.7 488H214.3l-40.6-165.3-90.4 22.6 22.6-90.4L24 214.3l81.9-40.6-22.6-90.4 90.4 22.6z'/%3E%3C/svg%3E");
+}
+
+.canada-leaf-top-left {
+  top: 1rem;
+  left: 1rem;
+}
+
 .grain-overlay {
   display: none;
 }
