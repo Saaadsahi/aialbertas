@@ -1,6 +1,5 @@
 import { Nav } from "@/components/nav";
 import { CrawlReactions } from "@/components/crawl-reactions";
-import { ForumPostForm } from "@/components/forum-post-form";
 import { MotionReveal } from "@/components/motion-reveal";
 import Link from "next/link";
 import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
@@ -84,24 +83,22 @@ export default async function CommunityPage() {
           </div>
 
           <div className="mt-8 rounded-[28px] border border-white/10 bg-white/5 p-5">
-            {sessionUser ? (
-              <div className="rounded-[24px] border border-white/10 bg-black/40 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/10 bg-black/40 px-5 py-4">
+              <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#f4d05a]">
-                  Write in the forum
+                  Forum preview
                 </p>
-                <ForumPostForm sessionUser={sessionUser} />
+                <p className="mt-2 text-sm text-white/70">
+                  Preview the latest forum conversations here, then open the forum to post, comment, and join in.
+                </p>
               </div>
-            ) : (
-              <div className="rounded-[24px] border border-white/10 bg-black/40 px-5 py-6">
-                <p className="text-sm text-white">Sign in to write in the community forum.</p>
-                <Link
-                  href="/login?redirect=/community"
-                  className="mt-4 inline-block rounded-full border border-white/20 px-5 py-2 text-sm text-white hover:bg-white hover:text-black"
-                >
-                  Sign in
-                </Link>
-              </div>
-            )}
+              <Link
+                href={sessionUser ? "/forum#new-post" : "/login?redirect=/forum"}
+                className="rounded-full border border-white/20 px-5 py-2 text-sm text-white hover:bg-white hover:text-black"
+              >
+                {sessionUser ? "Write a post" : "Sign in to post"}
+              </Link>
+            </div>
 
             {posts.length > 0 ? (
               <div className="mt-5 space-y-4">
@@ -138,7 +135,7 @@ export default async function CommunityPage() {
             ) : (
               <div className="px-6 py-12 text-center">
                 <p className="text-sm text-white">No forum posts yet.</p>
-                <p className="mt-1 text-xs text-white/60">Write the first one above and it will show here.</p>
+                <p className="mt-1 text-xs text-white/60">New forum conversations will preview here automatically.</p>
               </div>
             )}
           </div>

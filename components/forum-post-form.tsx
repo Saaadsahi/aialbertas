@@ -44,16 +44,33 @@ export function ForumPostForm({ sessionUser }: ForumPostFormProps) {
     setSubmitState("saving");
     setSubmitMessage(null);
 
+    const profileName = formatForumName(sessionUser.full_name ?? sessionUser.email?.split("@")[0] ?? null);
+
+    const { error: profileError } = await supabase.from("profiles").upsert(
+      {
+        id: sessionUser.id,
+        email: sessionUser.email,
+        full_name: profileName,
+      },
+      { onConflict: "id" }
+    );
+
+    if (profileError) {
+      setSubmitState("error");
+      setSubmitMessage("Could not prepare your profile for posting.");
+      return;
+    }
+
     const { error } = await supabase.from("forum_posts").insert({
       user_id: sessionUser.id,
-      full_name: formatForumName(sessionUser.full_name ?? sessionUser.email?.split("@")[0] ?? null),
+      full_name: profileName,
       subject: normalizedSubject,
       body: normalizedBody
     });
 
     if (error) {
       setSubmitState("error");
-      setSubmitMessage("Could not save your post right now.");
+      setSubmitMessage(error.message ?? "Could not save your post right now.");
       return;
     }
 
