@@ -67,6 +67,33 @@ body {
   transform: rotate(14deg);
 }
 
+.canada-leaf-mid-left {
+  top: 32rem;
+  left: 8%;
+  width: 9rem;
+  height: 9rem;
+  opacity: 0.03;
+  transform: rotate(-12deg);
+}
+
+.canada-leaf-mid-right {
+  top: 46rem;
+  right: 7%;
+  width: 10rem;
+  height: 10rem;
+  opacity: 0.032;
+  transform: rotate(10deg);
+}
+
+.canada-leaf-lower-right {
+  bottom: 16rem;
+  right: 12%;
+  width: 8rem;
+  height: 8rem;
+  opacity: 0.028;
+  transform: rotate(-18deg);
+}
+
 .grain-overlay {
   display: none;
 }
@@ -399,6 +426,12 @@ body {
   .canada-leaf-bottom {
     bottom: 1rem;
     left: 0.75rem;
+  }
+
+  .canada-leaf-mid-left,
+  .canada-leaf-mid-right,
+  .canada-leaf-lower-right {
+    display: none;
   }
 
   .crawl-viewport {
