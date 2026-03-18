@@ -86,7 +86,7 @@ export default async function HomePage({
             <SplitHeroTitle
               className="mt-4 font-display text-[48px] leading-none tracking-tight text-black sm:text-[80px] lg:text-[112px]"
               lines={[
-                "911 FOR",
+                "911  FOR",
                 "YOUR TECH",
                 "NEEDS.",
               ]}
