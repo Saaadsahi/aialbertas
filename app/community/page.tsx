@@ -1,4 +1,5 @@
 import { Nav } from "@/components/nav";
+import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
 import { MotionReveal } from "@/components/motion-reveal";
 import Link from "next/link";
 import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
@@ -27,12 +28,19 @@ const socialLinks = [
 export default async function CommunityPage() {
   const supabase = await createOptionalServerSupabaseClient();
 
-  const postsResult = supabase
-    ? await supabase.from("forum_posts").select("id, full_name, subject, body").order("created_at", { ascending: false }).limit(8)
-    : { data: [] as Array<{ id: string; full_name: string | null; subject: string; body: string }>, error: null };
+  const crawlResult = supabase
+    ? await supabase
+        .from("forum_posts")
+        .select("id, subject, body, crawl_title, crawl_duration, crawl_tilt, crawl_font_size, crawl_show_stars, featured")
+        .eq("post_type", "cinematic_crawl")
+        .eq("status", "published")
+        .order("featured", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    : { data: null, error: null };
 
-  const posts = postsResult.data ?? [];
-  const marqueePosts = posts.length > 0 ? [...posts, ...posts] : [];
+  const crawl = crawlResult.data;
 
   return (
     <main className="bg-white text-black">
@@ -64,30 +72,24 @@ export default async function CommunityPage() {
           </div>
 
           <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/5">
-            {marqueePosts.length > 0 ? (
-              <div className="forum-marquee-track">
-                {marqueePosts.map((post, index) => (
-                  <Link
-                    key={`${post.id}-${index}`}
-                    href={`/forum/${post.id}`}
-                    className="forum-marquee-card block"
-                  >
-                    <p className="text-lg font-semibold text-white">
-                      {(post.full_name || "Member")} says...
-                    </p>
-                    <p className="mt-3 font-display text-2xl tracking-tight text-white">
-                      {post.subject}
-                    </p>
-                    <p className="mt-3 line-clamp-4 text-sm leading-6 text-white/70">
-                      {post.body}
-                    </p>
-                  </Link>
-                ))}
+            {crawl ? (
+              <div className="p-4">
+                <CinematicCrawlPlayer
+                  title={crawl.crawl_title || "Ai Alberta Transmission"}
+                  episode={crawl.subject}
+                  body={crawl.body}
+                  duration={crawl.crawl_duration}
+                  tilt={Number(crawl.crawl_tilt)}
+                  fontSize={crawl.crawl_font_size}
+                  showStars={crawl.crawl_show_stars}
+                  className="min-h-[30rem]"
+                />
               </div>
             ) : (
               <div className="px-6 py-12 text-center">
-                <p className="text-sm text-white">No forum posts yet.</p>
-                <p className="mt-1 text-xs text-white/60">Once somebody posts, it will loop here.</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-[#f4d05a]">Cinematic crawl</p>
+                <p className="mt-4 text-sm text-white">No cinematic crawls published yet.</p>
+                <p className="mt-1 text-xs text-white/60">Create one in the forum and it will play here.</p>
               </div>
             )}
           </div>
