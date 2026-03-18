@@ -31,7 +31,7 @@ export async function getSessionUser() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, full_name")
+    .select("role, full_name, is_banned")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -40,5 +40,6 @@ export async function getSessionUser() {
     email: user.email ?? null,
     full_name: profile?.full_name ?? null,
     role: ((profile?.role ?? "user") === "admin" ? "admin" : "user") as "admin" | "user",
+    is_banned: Boolean(profile?.is_banned),
   };
 }

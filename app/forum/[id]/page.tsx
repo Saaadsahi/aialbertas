@@ -34,14 +34,29 @@ async function createForumComment(formData: FormData) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name")
+    .select("full_name, is_banned")
     .eq("id", user.id)
     .maybeSingle();
+
+  if (profile?.is_banned) {
+    redirect(`/forum/${postId}?error=banned`);
+  }
+
+  const displayName = profile?.full_name ?? user.user_metadata?.full_name ?? "Member";
+
+  await supabase.from("profiles").upsert(
+    {
+      id: user.id,
+      email: user.email ?? null,
+      full_name: displayName,
+    },
+    { onConflict: "id" }
+  );
 
   const { error } = await supabase.from("forum_comments").insert({
     post_id: postId,
     user_id: user.id,
-    full_name: profile?.full_name ?? user.user_metadata?.full_name ?? "Member",
+    full_name: displayName,
     body,
   });
 
@@ -50,6 +65,42 @@ async function createForumComment(formData: FormData) {
   }
 
   redirect(`/forum/${postId}?commented=1`);
+}
+
+async function deleteForumPost(formData: FormData) {
+  "use server";
+
+  const postId = String(formData.get("post_id") ?? "");
+  const supabase = await createOptionalServerSupabaseClient();
+
+  if (!supabase || !postId) {
+    redirect("/forum");
+  }
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect(`/login?redirect=${encodeURIComponent(`/forum/${postId}`)}`);
+  }
+
+  const [{ data: profile }, { data: post }] = await Promise.all([
+    supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(),
+    supabase.from("forum_posts").select("id, user_id").eq("id", postId).maybeSingle()
+  ]);
+
+  if (!post) {
+    redirect("/forum");
+  }
+
+  const canDelete = profile?.role === "admin" || post.user_id === user.id;
+  if (!canDelete) {
+    redirect(`/forum/${postId}`);
+  }
+
+  await supabase.from("forum_posts").delete().eq("id", postId);
+  redirect("/forum");
 }
 
 export default async function ForumThreadPage({
@@ -86,9 +137,13 @@ export default async function ForumThreadPage({
         ? "Links are not allowed in comments. Send us an email instead."
         : query.error === "submit"
           ? "We could not save your comment right now."
+          : query.error === "banned"
+            ? "Your account is currently banned from commenting."
           : query.error === "config"
             ? "Forum comments are not configured yet."
             : undefined;
+
+  const canDelete = !!sessionUser && (sessionUser.role === "admin" || sessionUser.id === post.user_id);
 
   return (
     <main className="bg-white text-black">
@@ -106,7 +161,20 @@ export default async function ForumThreadPage({
               <p className="text-sm font-semibold text-black">{post.full_name || "Member"} says...</p>
               <h1 className="mt-2 font-display text-4xl tracking-tight text-black">{post.subject}</h1>
             </div>
-            <p className="text-xs text-muted">{new Date(post.created_at).toLocaleString()}</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs text-muted">{new Date(post.created_at).toLocaleString()}</p>
+              {canDelete && (
+                <form action={deleteForumPost}>
+                  <input type="hidden" name="post_id" value={post.id} />
+                  <button
+                    type="submit"
+                    className="rounded-full border border-red-200 px-4 py-1.5 text-xs text-red-700 hover:bg-red-50"
+                  >
+                    Delete
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
           <p className="mt-6 whitespace-pre-wrap text-sm leading-7 text-black/80">{post.body}</p>
           <p className="mt-6 text-xs text-muted">+{comments?.length ?? 0} comments</p>

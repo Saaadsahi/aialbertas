@@ -7,6 +7,7 @@ export type SessionForumUser = {
   email: string | null;
   full_name: string | null;
   role: "admin" | "user";
+  is_banned: boolean;
 };
 
 export type CinematicCrawlRecord = {

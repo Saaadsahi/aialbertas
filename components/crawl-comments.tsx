@@ -48,13 +48,36 @@ export function CrawlComments({
       return;
     }
 
+    if (sessionUser.is_banned) {
+      setSubmitState("error");
+      setSubmitMessage("Your account is currently banned from commenting.");
+      return;
+    }
+
     setSubmitState("saving");
     setSubmitMessage(null);
+
+    const profileName = formatForumName(sessionUser.full_name ?? sessionUser.email?.split("@")[0] ?? null);
+
+    const { error: profileError } = await supabase.from("profiles").upsert(
+      {
+        id: sessionUser.id,
+        email: sessionUser.email,
+        full_name: profileName,
+      },
+      { onConflict: "id" }
+    );
+
+    if (profileError) {
+      setSubmitState("error");
+      setSubmitMessage("Could not prepare your profile for commenting.");
+      return;
+    }
 
     const { error } = await supabase.from("forum_comments").insert({
       post_id: postId,
       user_id: sessionUser.id,
-      full_name: formatForumName(sessionUser.full_name ?? sessionUser.email?.split("@")[0] ?? null),
+      full_name: profileName,
       body: normalizedBody
     });
 

@@ -19,6 +19,7 @@ drop trigger if exists on_auth_user_updated on auth.users;
 drop function if exists public.handle_new_user();
 drop function if exists public.handle_auth_user_updated();
 drop function if exists public.is_admin(uuid);
+drop function if exists public.is_banned(uuid);
 drop function if exists public.touch_forum_post_updated_at();
 
 
@@ -31,6 +32,7 @@ create table public.profiles (
   email      text,
   full_name  text,
   role       text        not null default 'user',
+  is_banned  boolean     not null default false,
   created_at timestamptz default now()
 );
 
@@ -215,6 +217,19 @@ as $$
   );
 $$;
 
+create or replace function public.is_banned(uid uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.profiles
+    where id = uid and is_banned = true
+  );
+$$;
+
 --------------------------------------------------
 -- ENABLE RLS
 --------------------------------------------------
@@ -234,6 +249,10 @@ alter table public.forum_reactions enable row level security;
 create policy "users_view_own_profile"
 on public.profiles for select
 using (auth.uid() = id);
+
+create policy "users_insert_own_profile"
+on public.profiles for insert
+with check (auth.uid() = id);
 
 create policy "users_update_own_profile"
 on public.profiles for update
@@ -297,12 +316,15 @@ using (
 
 create policy "users_create_own_forum_posts"
 on public.forum_posts for insert
-with check (auth.uid() = user_id);
+with check (auth.uid() = user_id and not public.is_banned(auth.uid()));
 
 create policy "authors_or_admins_update_forum_posts"
 on public.forum_posts for update
 using (auth.uid() = user_id or public.is_admin(auth.uid()))
-with check (auth.uid() = user_id or public.is_admin(auth.uid()));
+with check (
+  (auth.uid() = user_id and not public.is_banned(auth.uid()))
+  or public.is_admin(auth.uid())
+);
 
 create policy "authors_or_admins_delete_forum_posts"
 on public.forum_posts for delete
@@ -331,6 +353,7 @@ create policy "users_create_own_forum_comments"
 on public.forum_comments for insert
 with check (
   auth.uid() = user_id
+  and not public.is_banned(auth.uid())
   and exists (
     select 1
     from public.forum_posts post
@@ -370,6 +393,7 @@ create policy "users_create_own_forum_reactions"
 on public.forum_reactions for insert
 with check (
   auth.uid() = user_id
+  and not public.is_banned(auth.uid())
   and exists (
     select 1
     from public.forum_posts post
@@ -385,7 +409,7 @@ with check (
 create policy "users_update_own_forum_reactions"
 on public.forum_reactions for update
 using (auth.uid() = user_id)
-with check (auth.uid() = user_id);
+with check (auth.uid() = user_id and not public.is_banned(auth.uid()));
 
 create policy "users_delete_own_forum_reactions"
 on public.forum_reactions for delete

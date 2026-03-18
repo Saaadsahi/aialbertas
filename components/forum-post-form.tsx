@@ -41,6 +41,12 @@ export function ForumPostForm({ sessionUser }: ForumPostFormProps) {
       return;
     }
 
+    if (sessionUser.is_banned) {
+      setSubmitState("error");
+      setSubmitMessage("Your account is currently banned from posting.");
+      return;
+    }
+
     setSubmitState("saving");
     setSubmitMessage(null);
 

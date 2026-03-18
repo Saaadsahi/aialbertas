@@ -14,6 +14,7 @@ async function updateUser(formData: FormData) {
   const fullName = String(formData.get("full_name") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const makeAdmin = formData.get("is_admin") === "on";
+  const isBanned = formData.get("is_banned") === "on";
   const adminSupabase = getAdminSupabaseClient();
 
   await adminSupabase
@@ -22,6 +23,7 @@ async function updateUser(formData: FormData) {
       email,
       full_name: fullName,
       role: makeAdmin ? "admin" : "user",
+      is_banned: isBanned,
     })
     .eq("id", id);
 
@@ -137,6 +139,7 @@ export default async function UserDetailPage({
   const safePayments = payments ?? [];
   const safeRefunds = refunds ?? [];
   const isAdmin = profile.role === "admin";
+  const isBanned = Boolean(profile.is_banned);
   const totalSpentCents = safePayments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
   const refundedCents = safeRefunds.reduce((sum, refund) => sum + (refund.amount || 0), 0);
   const totalSpent = totalSpentCents / 100;
@@ -216,6 +219,16 @@ export default async function UserDetailPage({
                   />
                   <label htmlFor="is_admin" className="text-sm text-black">Admin access</label>
                 </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    name="is_banned"
+                    id="is_banned"
+                    defaultChecked={isBanned}
+                    className="h-4 w-4 rounded border-black/20"
+                  />
+                  <label htmlFor="is_banned" className="text-sm text-black">Banned from forum activity</label>
+                </div>
                 <div className="pt-2">
                   <button type="submit" className="rounded-full bg-black px-6 py-2 text-sm text-white hover:bg-gray-800">
                     Save User Changes
@@ -229,6 +242,7 @@ export default async function UserDetailPage({
               <div className="mt-4 space-y-3 text-sm">
                 <InfoRow label="User ID" value={userId} mono />
                 <InfoRow label="Role" value={profile.role ?? "user"} />
+                <InfoRow label="Forum access" value={isBanned ? "Banned" : "Allowed"} />
                 <InfoRow label="Email confirmed" value={authUser?.email_confirmed_at ? "Yes" : "No"} />
                 <InfoRow label="Created in Auth" value={authUser?.created_at ? new Date(authUser.created_at).toLocaleString() : "—"} />
               </div>
@@ -255,7 +269,14 @@ export default async function UserDetailPage({
                   <h2 className="font-display text-2xl text-black">Requests & Payments</h2>
                   <p className="mt-1 text-sm text-muted">Change payment state, inspect paid status, and refund money if needed.</p>
                 </div>
-                <RoleBadge role={profile.role ?? "user"} />
+                <div className="flex items-center gap-2">
+                  <RoleBadge role={profile.role ?? "user"} />
+                  {isBanned && (
+                    <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-mono uppercase text-red-700">
+                      banned
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="mt-4 space-y-3">
                 {safePayments.map((payment) => {

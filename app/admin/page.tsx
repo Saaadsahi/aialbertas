@@ -214,6 +214,7 @@ export default async function AdminPage({
                             <div className="flex flex-wrap items-center gap-2">
                               <p className="font-semibold text-black">{user.email}</p>
                               <RoleBadge role={user.role} />
+                              {user.is_banned && <InlineBadge label="banned" tone="red" />}
                               {user.hasPaid && <InlineBadge label="paid" tone="green" />}
                               {!user.emailConfirmed && <InlineBadge label="email unconfirmed" tone="yellow" />}
                             </div>
@@ -333,6 +334,7 @@ export default async function AdminPage({
                         <div className="flex flex-wrap items-center gap-2">
                           <p className="font-semibold text-black">{user.email}</p>
                           <RoleBadge role={user.role} />
+                          {user.is_banned && <InlineBadge label="banned" tone="red" />}
                           {user.hasPaid && <InlineBadge label="paid" tone="green" />}
                           {!user.emailConfirmed && <InlineBadge label="email unconfirmed" tone="yellow" />}
                         </div>
@@ -534,12 +536,13 @@ function InlineBadge({
   tone,
 }: {
   label: string;
-  tone: "green" | "yellow" | "blue";
+  tone: "green" | "yellow" | "blue" | "red";
 }) {
   const styles = {
     green: "bg-green-100 text-green-800",
     yellow: "bg-yellow-100 text-yellow-800",
     blue: "bg-blue-100 text-blue-700",
+    red: "bg-red-100 text-red-700",
   };
 
   return (

@@ -46,7 +46,20 @@ export function CrawlReactions({
       return;
     }
 
+    if (sessionUser.is_banned) {
+      return;
+    }
+
     setPendingType(type);
+
+    await supabase.from("profiles").upsert(
+      {
+        id: sessionUser.id,
+        email: sessionUser.email,
+        full_name: sessionUser.full_name,
+      },
+      { onConflict: "id" }
+    );
 
     if (activeReaction === type) {
       await supabase.from("forum_reactions").delete().eq("post_id", postId).eq("user_id", sessionUser.id);

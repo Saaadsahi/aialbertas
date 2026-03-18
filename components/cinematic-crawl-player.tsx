@@ -66,7 +66,7 @@ export function CinematicCrawlPlayer({
     restartTimeoutRef.current = setTimeout(() => {
       setHasEnded(false);
       setReplayKey((current) => current + 1);
-    }, 3000);
+    }, 2000);
   }
 
   return (
@@ -133,12 +133,6 @@ export function CinematicCrawlPlayer({
         <div
           key={replayKey}
           className={`crawl-motion ${isPaused ? "is-paused" : ""}`}
-          onAnimationEnd={() => {
-            setHasEnded(true);
-            if (!isPaused) {
-              scheduleRestart();
-            }
-          }}
           style={
             {
               "--crawl-duration": `${duration}s`,
@@ -148,7 +142,15 @@ export function CinematicCrawlPlayer({
           }
         >
           <div className="crawl-perspective">
-            <div className="crawl-copy">
+            <div
+              className="crawl-copy"
+              onAnimationEnd={() => {
+                setHasEnded(true);
+                if (!isPaused) {
+                  scheduleRestart();
+                }
+              }}
+            >
               <p className="crawl-episode">{episode}</p>
               <h2 className="crawl-title">{title}</h2>
               {body.split(/\n+/).filter(Boolean).map((paragraph, index) => (
