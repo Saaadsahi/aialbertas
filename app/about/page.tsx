@@ -1,5 +1,36 @@
 import { Nav } from "@/components/nav";
+import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
 import { MotionReveal } from "@/components/motion-reveal";
+
+const transmissionStory = `The Guy Who Fixed Things
+
+Saad never planned to become the guy who fixes things. It just sort of happened.
+
+One day someone couldn't log into their website. Another day someone's email wasn't working. Then someone's database broke at midnight. For some reason, Saad was always the person people called. Not because he had all the answers, but because he was curious enough to figure them out.
+
+He grew up the kind of person who pressed every button just to see what would happen. Computers, websites, servers, code, AI tools - if something existed, Saad wanted to open it up and see how it worked. Sometimes things broke. Actually... a lot of things broke. But every broken thing became a puzzle.
+
+Soon he realized something interesting: most people weren't bad with technology. They were just stuck.
+
+A business owner couldn't connect their software. A startup founder couldn't automate their workflow. A website worked perfectly on a developer's laptop but completely died when it went live.
+
+To Saad, these weren't disasters. They were mysteries.
+
+He started building things. Small tools first. Then bigger ones. AI systems. Websites. Automation scripts. Databases that tracked everything from payments to users. Sometimes he would sit for hours staring at an error message that made absolutely no sense.
+
+But when the system finally worked - when the site went live, when the automation ran perfectly, when someone messaged him saying "it works now!" - that was the moment he loved.
+
+Because behind every broken system was a person just trying to make something work.
+
+And somehow Saad always ended up being the guy who figured it out.
+
+Not because he was the smartest person in the room.
+
+But because he never stopped asking one simple question:
+
+"Okay... but why is it broken?"
+
+And once you ask that question long enough... eventually you find the answer.`;
 
 export default function AboutPage() {
   return (
@@ -56,6 +87,25 @@ export default function AboutPage() {
             </MotionReveal>
           ))}
         </div>
+
+        <MotionReveal className="mt-16" delayMs={380}>
+          <div className="mb-5">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted">Ai Alberta Transmission</p>
+            <h2 className="mt-3 font-display text-3xl tracking-tight text-black sm:text-5xl">
+              The Guy Who Fixed Things
+            </h2>
+          </div>
+          <CinematicCrawlPlayer
+            title="Ai Alberta Transmission"
+            episode="Episode 1"
+            body={transmissionStory}
+            duration={34}
+            tilt={22}
+            fontSize={28}
+            showStars
+            className="min-h-[38rem]"
+          />
+        </MotionReveal>
       </div>
     </main>
   );

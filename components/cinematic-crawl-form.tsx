@@ -13,6 +13,36 @@ type CinematicCrawlFormProps = {
   initialCrawl?: CinematicCrawlRecord;
 };
 
+const defaultTransmissionBody = `The Guy Who Fixed Things
+
+Saad never planned to become the guy who fixes things. It just sort of happened.
+
+One day someone couldn't log into their website. Another day someone's email wasn't working. Then someone's database broke at midnight. For some reason, Saad was always the person people called. Not because he had all the answers, but because he was curious enough to figure them out.
+
+He grew up the kind of person who pressed every button just to see what would happen. Computers, websites, servers, code, AI tools - if something existed, Saad wanted to open it up and see how it worked. Sometimes things broke. Actually... a lot of things broke. But every broken thing became a puzzle.
+
+Soon he realized something interesting: most people weren't bad with technology. They were just stuck.
+
+A business owner couldn't connect their software. A startup founder couldn't automate their workflow. A website worked perfectly on a developer's laptop but completely died when it went live.
+
+To Saad, these weren't disasters. They were mysteries.
+
+He started building things. Small tools first. Then bigger ones. AI systems. Websites. Automation scripts. Databases that tracked everything from payments to users. Sometimes he would sit for hours staring at an error message that made absolutely no sense.
+
+But when the system finally worked - when the site went live, when the automation ran perfectly, when someone messaged him saying "it works now!" - that was the moment he loved.
+
+Because behind every broken system was a person just trying to make something work.
+
+And somehow Saad always ended up being the guy who figured it out.
+
+Not because he was the smartest person in the room.
+
+But because he never stopped asking one simple question:
+
+"Okay... but why is it broken?"
+
+And once you ask that question long enough... eventually you find the answer.`;
+
 export function CinematicCrawlForm({
   mode,
   sessionUser,
@@ -24,15 +54,13 @@ export function CinematicCrawlForm({
   const [subject, setSubject] = useState(initialCrawl?.subject ?? "Episode 1");
   const [crawlTitle, setCrawlTitle] = useState(initialCrawl?.crawl_title ?? "Ai Alberta Transmission");
   const [body, setBody] = useState(
-    initialCrawl?.body ??
-      "A new Alberta signal is moving through the system.\n\nBring your build, your question, or your half-finished machine. The crawl keeps a record of what is worth shipping."
+    initialCrawl?.body ?? defaultTransmissionBody
   );
   const [status, setStatus] = useState<ForumPostStatus>(initialCrawl?.status ?? "published");
   const [duration, setDuration] = useState(initialCrawl?.crawl_duration ?? 34);
   const [tilt, setTilt] = useState(Number(initialCrawl?.crawl_tilt ?? 22));
   const [fontSize, setFontSize] = useState(initialCrawl?.crawl_font_size ?? 28);
   const [showStars, setShowStars] = useState(initialCrawl?.crawl_show_stars ?? true);
-  const [featured, setFeatured] = useState(initialCrawl?.featured ?? false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "saving" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
@@ -71,7 +99,7 @@ export function CinematicCrawlForm({
       crawl_tilt: tilt,
       crawl_font_size: fontSize,
       crawl_show_stars: showStars,
-      featured: sessionUser.role === "admin" ? featured : false
+      featured: false
     };
 
     const query = initialCrawl
@@ -108,12 +136,6 @@ export function CinematicCrawlForm({
             Live preview
           </button>
         </div>
-
-        {submitState === "error" && submitMessage && (
-          <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
-            {submitMessage}
-          </p>
-        )}
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
@@ -205,16 +227,6 @@ export function CinematicCrawlForm({
             />
             Star field
           </label>
-          {sessionUser.role === "admin" && (
-            <label className="flex items-center gap-3 text-sm text-black">
-              <input
-                type="checkbox"
-                checked={featured}
-                onChange={(event) => setFeatured(event.target.checked)}
-              />
-              Feature this transmission
-            </label>
-          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
