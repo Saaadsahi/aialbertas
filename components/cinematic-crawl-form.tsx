@@ -57,7 +57,7 @@ export function CinematicCrawlForm({
     initialCrawl?.body ?? defaultTransmissionBody
   );
   const [status, setStatus] = useState<ForumPostStatus>(initialCrawl?.status ?? "published");
-  const [duration, setDuration] = useState(initialCrawl?.crawl_duration ?? 34);
+  const [duration, setDuration] = useState(initialCrawl?.crawl_duration ?? 60);
   const [tilt, setTilt] = useState(Number(initialCrawl?.crawl_tilt ?? 22));
   const [fontSize, setFontSize] = useState(initialCrawl?.crawl_font_size ?? 28);
   const [showStars, setShowStars] = useState(initialCrawl?.crawl_show_stars ?? true);

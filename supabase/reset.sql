@@ -14,13 +14,13 @@ drop table if exists public.admins cascade;
 drop table if exists public.profiles cascade;
 
 -- Drop old functions/triggers cleanly
-drop trigger if exists on_auth_user_created  on auth.users;
-drop trigger if exists on_auth_user_updated  on auth.users;
-drop trigger if exists forum_post_set_updated_at on public.forum_posts;
+drop trigger if exists on_auth_user_created on auth.users;
+drop trigger if exists on_auth_user_updated on auth.users;
 drop function if exists public.handle_new_user();
 drop function if exists public.handle_auth_user_updated();
 drop function if exists public.is_admin(uuid);
 drop function if exists public.touch_forum_post_updated_at();
+
 
 --------------------------------------------------
 -- PROFILES

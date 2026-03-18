@@ -1,7 +1,5 @@
 import { Nav } from "@/components/nav";
 import { MotionReveal } from "@/components/motion-reveal";
-import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
-import { CinematicCrawlForm } from "@/components/cinematic-crawl-form";
 import { ForumPostForm } from "@/components/forum-post-form";
 import Link from "next/link";
 import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
@@ -40,10 +38,6 @@ export default async function ForumPage() {
 
   const allPosts = postsResult.data ?? [];
   const posts = allPosts.filter((post) => post.post_type !== "cinematic_crawl");
-  const crawlPosts = allPosts
-    .filter((post) => post.post_type === "cinematic_crawl")
-    .sort((left, right) => Number(right.featured) - Number(left.featured) || right.created_at.localeCompare(left.created_at));
-  const featuredCrawl = crawlPosts.find((post) => post.featured) ?? crawlPosts[0] ?? null;
   const comments = commentsResult.data ?? [];
   const commentCounts = comments.reduce<Record<string, number>>((acc, comment) => {
     acc[comment.post_id] = (acc[comment.post_id] ?? 0) + 1;
@@ -88,53 +82,7 @@ export default async function ForumPage() {
               </Link>
             </div>
           </MotionReveal>
-          <MotionReveal className="rounded-[32px] border border-black/10 bg-black p-6 text-white" delayMs={160} variant="soft">
-            {featuredCrawl ? (
-              <CinematicCrawlPlayer
-                title={featuredCrawl.crawl_title || "Ai Alberta Transmission"}
-                episode={featuredCrawl.subject}
-                body={featuredCrawl.body}
-                duration={featuredCrawl.crawl_duration}
-                tilt={Number(featuredCrawl.crawl_tilt)}
-                fontSize={featuredCrawl.crawl_font_size}
-                showStars={featuredCrawl.crawl_show_stars}
-                className="min-h-[34rem]"
-              />
-            ) : (
-              <div className="rounded-[28px] border border-white/10 bg-white/5 px-6 py-12 text-center">
-                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-[#f4d05a]">Cinematic crawl</p>
-                <p className="mt-4 text-lg text-white">No cinematic crawls published yet.</p>
-                <p className="mt-2 text-sm text-white/60">Publish one below and it will appear here.</p>
-              </div>
-            )}
-          </MotionReveal>
-        </div>
-
-        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
-          <MotionReveal delayMs={120}>
-            {sessionUser ? (
-              <CinematicCrawlForm
-                mode="create"
-                sessionUser={sessionUser}
-              />
-            ) : (
-              <div className="rounded-[32px] border border-black/10 bg-[#f8f6f1] p-6">
-                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted">Cinematic crawl</p>
-                <h2 className="mt-3 font-display text-3xl tracking-tight text-black">Create a transmission</h2>
-                <p className="mt-3 max-w-xl text-sm text-muted">
-                  Sign in to write a Star Wars style cinematic crawl that saves to the forum and replays inside the community black box.
-                </p>
-                <Link
-                  href="/login?redirect=/forum"
-                  className="mt-5 inline-block rounded-full bg-black px-6 py-2 text-sm text-white hover:bg-gray-800"
-                >
-                  Sign in to create
-                </Link>
-              </div>
-            )}
-          </MotionReveal>
-
-          <MotionReveal className="rounded-[32px] border border-black/10 bg-gradient-to-br from-black/[0.04] via-white to-black/[0.03] p-6" delayMs={180} variant="soft">
+          <MotionReveal className="rounded-[32px] border border-black/10 bg-gradient-to-br from-black/[0.04] via-white to-black/[0.03] p-6" delayMs={160} variant="soft">
             <div className="grid gap-4">
               {forumLanes.map((lane, index) => (
                 <MotionReveal

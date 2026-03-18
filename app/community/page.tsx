@@ -1,8 +1,10 @@
 import { Nav } from "@/components/nav";
-import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
+import { CrawlReactions } from "@/components/crawl-reactions";
+import { ForumPostForm } from "@/components/forum-post-form";
 import { MotionReveal } from "@/components/motion-reveal";
 import Link from "next/link";
 import { createOptionalServerSupabaseClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth/admin";
 
 const socialLinks = [
   {
@@ -26,21 +28,31 @@ const socialLinks = [
 ];
 
 export default async function CommunityPage() {
-  const supabase = await createOptionalServerSupabaseClient();
+  const [supabase, sessionUser] = await Promise.all([
+    createOptionalServerSupabaseClient(),
+    getSessionUser()
+  ]);
 
-  const crawlResult = supabase
-    ? await supabase
-        .from("forum_posts")
-        .select("id, subject, body, crawl_title, crawl_duration, crawl_tilt, crawl_font_size, crawl_show_stars, featured")
-        .eq("post_type", "cinematic_crawl")
-        .eq("status", "published")
-        .order("featured", { ascending: false })
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-    : { data: null, error: null };
+  const [postsResult, commentsResult, reactionsResult] = supabase
+    ? await Promise.all([
+        supabase
+          .from("forum_posts")
+          .select("*")
+          .neq("post_type", "cinematic_crawl")
+          .order("created_at", { ascending: false })
+          .limit(4),
+        supabase.from("forum_comments").select("id, post_id"),
+        supabase.from("forum_reactions").select("*")
+      ])
+    : [{ data: [], error: null }, { data: [], error: null }, { data: [], error: null }];
 
-  const crawl = crawlResult.data;
+  const posts = postsResult.data ?? [];
+  const comments = commentsResult.data ?? [];
+  const reactions = reactionsResult.data ?? [];
+  const commentCounts = comments.reduce<Record<string, number>>((acc, comment) => {
+    acc[comment.post_id] = (acc[comment.post_id] ?? 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <main className="bg-white text-black">
@@ -71,25 +83,62 @@ export default async function CommunityPage() {
             </Link>
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-white/5">
-            {crawl ? (
-              <div className="p-4">
-                <CinematicCrawlPlayer
-                  title={crawl.crawl_title || "Ai Alberta Transmission"}
-                  episode={crawl.subject}
-                  body={crawl.body}
-                  duration={crawl.crawl_duration}
-                  tilt={Number(crawl.crawl_tilt)}
-                  fontSize={crawl.crawl_font_size}
-                  showStars={crawl.crawl_show_stars}
-                  className="min-h-[30rem]"
-                />
+          <div className="mt-8 rounded-[28px] border border-white/10 bg-white/5 p-5">
+            {sessionUser ? (
+              <div className="rounded-[24px] border border-white/10 bg-black/40 p-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#f4d05a]">
+                  Write in the forum
+                </p>
+                <ForumPostForm sessionUser={sessionUser} />
+              </div>
+            ) : (
+              <div className="rounded-[24px] border border-white/10 bg-black/40 px-5 py-6">
+                <p className="text-sm text-white">Sign in to write in the community forum.</p>
+                <Link
+                  href="/login?redirect=/community"
+                  className="mt-4 inline-block rounded-full border border-white/20 px-5 py-2 text-sm text-white hover:bg-white hover:text-black"
+                >
+                  Sign in
+                </Link>
+              </div>
+            )}
+
+            {posts.length > 0 ? (
+              <div className="mt-5 space-y-4">
+                {posts.map((post) => (
+                  <article key={post.id} className="rounded-[24px] border border-white/10 bg-black/35 p-5">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#f4d05a]">
+                          {post.full_name || "Member"}
+                        </p>
+                        <h3 className="mt-2 font-display text-2xl tracking-tight text-white">
+                          {post.subject}
+                        </h3>
+                      </div>
+                      <p className="text-xs text-white/45">{new Date(post.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <p className="mt-3 line-clamp-4 text-sm leading-7 text-white/72">{post.body}</p>
+                    <div className="mt-5 flex flex-wrap items-center gap-4">
+                      <CrawlReactions
+                        postId={post.id}
+                        reactions={reactions.filter((reaction) => reaction.post_id === post.id)}
+                        sessionUser={sessionUser}
+                      />
+                      <Link
+                        href={sessionUser ? `/forum/${post.id}` : `/login?redirect=${encodeURIComponent(`/forum/${post.id}`)}`}
+                        className="text-xs text-white/65 underline hover:text-white"
+                      >
+                        +{commentCounts[post.id] ?? 0} comments
+                      </Link>
+                    </div>
+                  </article>
+                ))}
               </div>
             ) : (
               <div className="px-6 py-12 text-center">
-                <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-[#f4d05a]">Cinematic crawl</p>
-                <p className="mt-4 text-sm text-white">No cinematic crawls published yet.</p>
-                <p className="mt-1 text-xs text-white/60">Create one in the forum and it will play here.</p>
+                <p className="text-sm text-white">No forum posts yet.</p>
+                <p className="mt-1 text-xs text-white/60">Write the first one above and it will show here.</p>
               </div>
             )}
           </div>
