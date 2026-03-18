@@ -4,6 +4,16 @@ import { displayFont, monoFont, sansFont } from "@/lib/fonts";
 import { ReactNode } from "react";
 
 const siteUrl = "https://aialbertas.com";
+const mapleLeafs = [
+  { top: "10rem", left: "5%", size: "1.9rem", rotate: "-18deg" },
+  { top: "14rem", right: "7%", size: "1.5rem", rotate: "14deg" },
+  { top: "34rem", left: "9%", size: "1.4rem", rotate: "-8deg" },
+  { top: "42rem", right: "10%", size: "1.7rem", rotate: "11deg" },
+  { top: "58rem", left: "14%", size: "1.25rem", rotate: "-16deg" },
+  { top: "72rem", right: "16%", size: "1.6rem", rotate: "17deg" },
+  { bottom: "15rem", left: "7%", size: "1.45rem", rotate: "9deg" },
+  { bottom: "8rem", right: "12%", size: "1.8rem", rotate: "-12deg" },
+];
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -72,6 +82,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div aria-hidden="true" className="canada-leaf canada-leaf-mid-right" />
         <div aria-hidden="true" className="canada-leaf canada-leaf-bottom" />
         <div aria-hidden="true" className="canada-leaf canada-leaf-lower-right" />
+        {mapleLeafs.map((leaf, index) => (
+          <div
+            key={index}
+            aria-hidden="true"
+            className="canada-leaf canada-leaf-mini"
+            style={{
+              top: leaf.top,
+              right: leaf.right,
+              bottom: leaf.bottom,
+              left: leaf.left,
+              width: leaf.size,
+              height: leaf.size,
+              transform: `rotate(${leaf.rotate})`,
+            }}
+          />
+        ))}
         {children}
       </body>
     </html>
