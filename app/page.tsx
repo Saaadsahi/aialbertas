@@ -73,7 +73,7 @@ export default async function HomePage({
       <Nav />
       <section className="relative overflow-hidden border-b border-black/10 bg-[linear-gradient(180deg,#ffffff_0%,#fafaf8_100%)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(0,0,0,0.06),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(193,154,107,0.16),_transparent_34%)]" />
-        <div className="relative z-10 mx-auto grid max-w-6xl gap-12 px-4 pb-16 pt-28 lg:grid-cols-[minmax(0,1.05fr)_minmax(440px,0.95fr)] lg:items-center">
+        <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-4 pb-16 pt-40 sm:gap-12 sm:pt-28 lg:grid-cols-[minmax(0,1.05fr)_minmax(440px,0.95fr)] lg:items-center">
           <div className="max-w-2xl">
             {formattedName && (
               <MotionReveal as="p" className="mb-5 text-xl tracking-tight text-black/75 sm:text-2xl" delayMs={40}>
@@ -84,7 +84,7 @@ export default async function HomePage({
               Built in Alberta. Built for Alberta.
             </MotionReveal>
             <SplitHeroTitle
-              className="mt-4 font-display text-[48px] leading-none tracking-tight text-black sm:text-[80px] lg:text-[112px]"
+              className="mt-4 font-display text-[42px] leading-none tracking-tight text-black sm:text-[80px] lg:text-[112px]"
               lines={[
                 "911  FOR",
                 "YOUR TECH",
@@ -96,16 +96,16 @@ export default async function HomePage({
               and help accelerate AI in Alberta. AIAlberta is here to make Alberta a sharper
               hub for practical AI, with one mission: no one left behind.
             </MotionReveal>
-            <MotionReveal className="mt-8 flex flex-wrap gap-4 text-xs sm:text-sm" delayMs={280}>
+            <MotionReveal className="mt-8 flex flex-col gap-3 text-xs sm:flex-row sm:flex-wrap sm:gap-4 sm:text-sm" delayMs={280}>
               <Link
                 href="/order"
-                className="rounded-full bg-black px-6 py-2 text-white hover:bg-gray-800"
+                className="rounded-full bg-black px-6 py-3 text-center text-white hover:bg-gray-800 sm:py-2"
               >
                 Order a Service
               </Link>
               <Link
                 href="/community"
-                className="rounded-full border border-black/40 px-6 py-2 text-black hover:bg-black hover:text-white"
+                className="rounded-full border border-black/40 px-6 py-3 text-center text-black hover:bg-black hover:text-white sm:py-2"
               >
                 Join the Community
               </Link>
@@ -125,7 +125,7 @@ export default async function HomePage({
                 <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
                   Coffee chat
                 </p>
-                <h2 className="mt-4 font-display text-4xl tracking-tight text-black sm:text-5xl">
+                <h2 className="mt-4 font-display text-3xl tracking-tight text-black sm:text-5xl">
                   Wanna talk tech,
                   <br />
                   Wanna build stuff?
