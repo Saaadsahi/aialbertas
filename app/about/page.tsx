@@ -106,7 +106,7 @@ export default function AboutPage() {
           </MotionReveal>
           <MotionReveal className="relative h-64 overflow-hidden rounded-3xl border border-black/10 bg-black/5" delayMs={220} variant="soft">
             <Image
-              src="/about-workspace-photo.jpg"
+              src="/IMG_0529.webp"
               alt="AiAlberta workspace with multiple screens showing design and development work."
               fill
               className="object-cover"
