@@ -11,6 +11,8 @@ type CinematicCrawlPlayerProps = {
   fontSize: number;
   showStars: boolean;
   autoPlay?: boolean;
+  loopDelayMs?: number;
+  startPosition?: "bottom" | "top";
   className?: string;
 };
 
@@ -23,6 +25,8 @@ export function CinematicCrawlPlayer({
   fontSize,
   showStars,
   autoPlay = true,
+  loopDelayMs = 2000,
+  startPosition = "bottom",
   className = ""
 }: CinematicCrawlPlayerProps) {
   const [isPaused, setIsPaused] = useState(!autoPlay);
@@ -66,7 +70,7 @@ export function CinematicCrawlPlayer({
     restartTimeoutRef.current = setTimeout(() => {
       setHasEnded(false);
       setReplayKey((current) => current + 1);
-    }, 2000);
+    }, loopDelayMs);
   }
 
   return (
@@ -132,12 +136,14 @@ export function CinematicCrawlPlayer({
 
         <div
           key={replayKey}
-          className={`crawl-motion ${isPaused ? "is-paused" : ""}`}
+          className={`crawl-motion ${isPaused ? "is-paused" : ""} ${startPosition === "top" ? "start-top" : ""}`}
           style={
             {
               "--crawl-duration": `${duration}s`,
               "--crawl-tilt": `${tilt}deg`,
-              "--crawl-font-size": `${fontSize}px`
+              "--crawl-font-size": `${fontSize}px`,
+              "--crawl-start-translate": startPosition === "top" ? "0%" : "72%",
+              "--crawl-end-translate": startPosition === "top" ? "-280%" : "-210%"
             } as React.CSSProperties
           }
         >

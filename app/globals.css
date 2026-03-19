@@ -313,6 +313,11 @@ body {
   justify-content: center;
 }
 
+.crawl-motion.start-top {
+  align-items: flex-start;
+  padding-top: 2rem;
+}
+
 .crawl-perspective {
   width: min(88%, 46rem);
   perspective: 520px;
@@ -362,11 +367,11 @@ body {
 
 @keyframes crawl-rise {
   from {
-    transform: rotateX(var(--crawl-tilt, 22deg)) translateY(72%);
+    transform: rotateX(var(--crawl-tilt, 22deg)) translateY(var(--crawl-start-translate, 72%));
   }
 
   to {
-    transform: rotateX(var(--crawl-tilt, 22deg)) translateY(-210%);
+    transform: rotateX(var(--crawl-tilt, 22deg)) translateY(var(--crawl-end-translate, -210%));
   }
 }
 

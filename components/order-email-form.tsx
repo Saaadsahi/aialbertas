@@ -8,10 +8,10 @@ type OrderEmailFormProps = {
 };
 
 const serviceOptions = [
-  "Automation Workflow",
-  "Custom AI App",
-  "AI Architecture",
   "Vibe Code Cleanup",
+  "Custom Site",
+  "Custom AI Workflows",
+  "AI Architecture",
   "General Inquiry"
 ] as const;
 
@@ -28,7 +28,7 @@ export function OrderEmailForm({
 }: OrderEmailFormProps) {
   const [name, setName] = useState(defaultName);
   const [email, setEmail] = useState(defaultEmail);
-  const [serviceType, setServiceType] = useState<(typeof serviceOptions)[number]>("Automation Workflow");
+  const [serviceType, setServiceType] = useState<(typeof serviceOptions)[number]>("Vibe Code Cleanup");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState<(typeof budgetOptions)[number]["value"]>("under-5k");
 

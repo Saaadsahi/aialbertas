@@ -12,10 +12,10 @@ const CONTACT_EMAIL_ENDPOINT =
 
 const serviceOptions = [
   "General Inquiry",
-  "Automation Workflow",
-  "Custom AI App",
-  "AI Architecture",
   "Vibe Code Cleanup",
+  "Custom Site",
+  "Custom AI Workflows",
+  "AI Architecture",
   "Event Hosting"
 ] as const;
 

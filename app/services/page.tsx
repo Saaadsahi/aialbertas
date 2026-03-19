@@ -5,24 +5,19 @@ import Link from "next/link";
 
 const services = [
   {
-    title: "AI Assistant Automation Workflows",
-    emoji: "⚡",
-    body: "We automate intake, follow-up, internal knowledge retrieval, and repetitive operational tasks with AI assistants that actually fit your team."
-  },
-  {
-    title: "Custom AI App Builds",
-    emoji: "🧠",
-    body: "Chat interfaces, copilots, internal tools, and client-facing products designed with your data, your brand, and your security in mind."
-  },
-  {
-    title: "SSAG Calculator",
-    emoji: "⚖️",
-    body: "A focused legal-tech workflow for calculating spousal support under the SSAG model with cleaner intake, repeatable logic, and faster case handling."
-  },
-  {
     title: "Vibe Code Cleanup",
     emoji: "🛠️",
     body: "We refactor brittle scripts and half-finished projects into clean, documented foundations you can build on."
+  },
+  {
+    title: "Custom Sites",
+    emoji: "📱",
+    body: "Custom websites built to feel polished on every screen, whether someone shows up from an Apple device or a Samsung phone."
+  },
+  {
+    title: "Custom AI Workflows",
+    emoji: "⚡",
+    body: "We design AI workflows for intake, follow-up, internal knowledge retrieval, and repetitive operational work so your team moves faster without adding chaos."
   }
 ];
 
