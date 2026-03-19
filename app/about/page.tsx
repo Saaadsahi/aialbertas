@@ -136,7 +136,7 @@ export default function AboutPage() {
             </h2>
           </div>
           <CinematicCrawlPlayer
-            title="Ai Alberta Transmission"
+            title="The Story"
             episode="Episode 1"
             body={transmissionStory}
             duration={240}
@@ -144,7 +144,7 @@ export default function AboutPage() {
             fontSize={28}
             showStars
             loopDelayMs={1000}
-            startOffset="88%"
+            startOffset="96%"
             className="min-h-[38rem]"
           />
         </MotionReveal>
