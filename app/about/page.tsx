@@ -1,6 +1,7 @@
 import { Nav } from "@/components/nav";
 import { CinematicCrawlPlayer } from "@/components/cinematic-crawl-player";
 import { MotionReveal } from "@/components/motion-reveal";
+import Image from "next/image";
 
 const transmissionStory = `I did not wake up one day and decide to become the guy who fixes things. It just happened slowly, like small moments stacking on top of each other.
 
@@ -103,13 +104,16 @@ export default function AboutPage() {
               Mission: No one left behind.
             </p>
           </MotionReveal>
-          <MotionReveal className="relative h-64 overflow-hidden rounded-3xl border border-black/10 bg-gradient-to-br from-black/10 via-black/5 to-transparent" delayMs={220} variant="soft">
-            <div className="absolute inset-6 grid grid-cols-3 gap-3 opacity-70">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-black/10 bg-black/5" />
-              ))}
-            </div>
-            <div className="absolute bottom-4 left-4 rounded-full bg-white/80 px-4 py-2 text-xs text-black backdrop-blur">
+          <MotionReveal className="relative h-64 overflow-hidden rounded-3xl border border-black/10 bg-black/5" delayMs={220} variant="soft">
+            <Image
+              src="/about-workspace-photo.jpg"
+              alt="AiAlberta workspace with multiple screens showing design and development work."
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 40vw, 100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/10" />
+            <div className="absolute bottom-4 left-4 rounded-full bg-white/85 px-4 py-2 text-xs text-black backdrop-blur">
               Local, certified, affordable, community-first.
             </div>
           </MotionReveal>
