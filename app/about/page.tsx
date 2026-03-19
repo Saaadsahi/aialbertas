@@ -144,7 +144,8 @@ export default function AboutPage() {
             fontSize={28}
             showStars
             loopDelayMs={1000}
-            startFromTop
+            startOffset="18%"
+            endOffset="-190%"
             className="min-h-[38rem]"
           />
         </MotionReveal>

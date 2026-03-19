@@ -317,11 +317,6 @@ body {
   justify-content: center;
 }
 
-.crawl-motion.start-top {
-  align-items: flex-start;
-  padding-top: 2rem;
-}
-
 .crawl-perspective {
   width: min(88%, 46rem);
   perspective: 520px;
