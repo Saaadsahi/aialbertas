@@ -104,12 +104,12 @@ export default function AboutPage() {
               Mission: No one left behind.
             </p>
           </MotionReveal>
-          <MotionReveal className="relative h-64 overflow-hidden rounded-3xl border border-black/10 bg-black/5" delayMs={220} variant="soft">
+          <MotionReveal className="relative aspect-[4284/4430] overflow-hidden rounded-3xl border border-black/10 bg-black/5" delayMs={220} variant="soft">
             <Image
               src="/IMG_0529.webp"
               alt="AiAlberta workspace with multiple screens showing design and development work."
               fill
-              className="object-cover"
+              className="object-cover object-center"
               sizes="(min-width: 1024px) 40vw, 100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/10" />
