@@ -12,6 +12,7 @@ type CinematicCrawlPlayerProps = {
   showStars: boolean;
   autoPlay?: boolean;
   loopDelayMs?: number;
+  startOffset?: string;
   className?: string;
 };
 
@@ -25,6 +26,7 @@ export function CinematicCrawlPlayer({
   showStars,
   autoPlay = true,
   loopDelayMs = 2000,
+  startOffset = "72%",
   className = ""
 }: CinematicCrawlPlayerProps) {
   const [isPaused, setIsPaused] = useState(!autoPlay);
@@ -139,7 +141,8 @@ export function CinematicCrawlPlayer({
             {
               "--crawl-duration": `${duration}s`,
               "--crawl-tilt": `${tilt}deg`,
-              "--crawl-font-size": `${fontSize}px`
+              "--crawl-font-size": `${fontSize}px`,
+              "--crawl-start-translate": startOffset
             } as React.CSSProperties
           }
         >
