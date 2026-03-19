@@ -11,6 +11,7 @@ const serviceOptions = [
   "Vibe Code Cleanup",
   "Custom Site",
   "Custom AI Workflows",
+  "Integrating AI Into Business",
   "AI Architecture",
   "General Inquiry"
 ] as const;

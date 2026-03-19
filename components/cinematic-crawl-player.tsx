@@ -142,8 +142,8 @@ export function CinematicCrawlPlayer({
               "--crawl-duration": `${duration}s`,
               "--crawl-tilt": `${tilt}deg`,
               "--crawl-font-size": `${fontSize}px`,
-              "--crawl-start-translate": startPosition === "top" ? "0%" : "72%",
-              "--crawl-end-translate": startPosition === "top" ? "-280%" : "-210%"
+              "--crawl-start-translate": startPosition === "top" ? "18%" : "72%",
+              "--crawl-end-translate": startPosition === "top" ? "-240%" : "-210%"
             } as React.CSSProperties
           }
         >

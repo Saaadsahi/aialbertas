@@ -139,7 +139,7 @@ export default function AboutPage() {
             title="Ai Alberta Transmission"
             episode="Episode 1"
             body={transmissionStory}
-            duration={260}
+            duration={220}
             tilt={22}
             fontSize={28}
             showStars

@@ -18,6 +18,11 @@ const services = [
     title: "Custom AI Workflows",
     emoji: "⚡",
     body: "We design AI workflows for intake, follow-up, internal knowledge retrieval, and repetitive operational work so your team moves faster without adding chaos."
+  },
+  {
+    title: "Integrating AI Into Business",
+    emoji: "🏢",
+    body: "We help businesses bring AI into day-to-day operations with practical integrations across teams, tools, reporting, and customer workflows."
   }
 ];
 
