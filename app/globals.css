@@ -8,6 +8,10 @@ body {
   color: #000000;
 }
 
+html {
+  --font-display: var(--font-sans);
+}
+
 body {
   min-height: 100vh;
 }

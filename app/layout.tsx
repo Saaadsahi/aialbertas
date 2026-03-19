@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { displayFont, monoFont, sansFont } from "@/lib/fonts";
+import { monoFont, sansFont } from "@/lib/fonts";
 import { ReactNode } from "react";
 
 const siteUrl = "https://aialbertas.com";
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${displayFont.variable} ${sansFont.variable} ${monoFont.variable}`}>
+    <html lang="en" className={`${sansFont.variable} ${monoFont.variable}`}>
       <body className="canada-proud bg-white text-black antialiased">
         <script
           type="application/ld+json"

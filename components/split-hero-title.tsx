@@ -1,5 +1,3 @@
-"use client";
-
 type SplitHeroTitleProps = {
   lines: string[];
   className?: string;
