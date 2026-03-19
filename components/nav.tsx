@@ -17,8 +17,8 @@ export async function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-black/10 bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:py-4">
-        <Link href="/" className="font-display text-xl tracking-[0.18em] uppercase text-black sm:text-2xl">
-          AiAlberta
+        <Link href="/" className="font-display text-xl tracking-[0.18em] text-black sm:text-2xl">
+          Ai Alberta
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-muted sm:flex">
           <Link href="/" className="hover:text-black">Home</Link>
