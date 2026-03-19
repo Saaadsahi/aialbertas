@@ -139,11 +139,12 @@ export default function AboutPage() {
             title="Ai Alberta Transmission"
             episode="Episode 1"
             body={transmissionStory}
-            duration={240}
+            duration={300}
             tilt={22}
             fontSize={28}
             showStars
             loopDelayMs={1000}
+            startFromTop
             className="min-h-[38rem]"
           />
         </MotionReveal>

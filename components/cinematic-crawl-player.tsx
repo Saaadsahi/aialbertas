@@ -12,6 +12,7 @@ type CinematicCrawlPlayerProps = {
   showStars: boolean;
   autoPlay?: boolean;
   loopDelayMs?: number;
+  startFromTop?: boolean;
   className?: string;
 };
 
@@ -25,6 +26,7 @@ export function CinematicCrawlPlayer({
   showStars,
   autoPlay = true,
   loopDelayMs = 2000,
+  startFromTop = false,
   className = ""
 }: CinematicCrawlPlayerProps) {
   const [isPaused, setIsPaused] = useState(!autoPlay);
@@ -134,18 +136,20 @@ export function CinematicCrawlPlayer({
 
         <div
           key={replayKey}
-          className={`crawl-motion ${isPaused ? "is-paused" : ""}`}
+          className={`crawl-motion ${isPaused ? "is-paused" : ""} ${startFromTop ? "start-top" : ""}`}
           style={
             {
               "--crawl-duration": `${duration}s`,
               "--crawl-tilt": `${tilt}deg`,
-              "--crawl-font-size": `${fontSize}px`
+              "--crawl-font-size": `${fontSize}px`,
+              "--crawl-start-translate": startFromTop ? "0%" : "72%",
+              "--crawl-end-translate": startFromTop ? "-140%" : "-210%"
             } as React.CSSProperties
           }
         >
           <div className="crawl-perspective">
             <div
-              className="crawl-copy"
+              className={`crawl-copy ${startFromTop ? "start-top" : ""}`}
               onAnimationEnd={() => {
                 setHasEnded(true);
                 if (!isPaused) {
