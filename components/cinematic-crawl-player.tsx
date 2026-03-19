@@ -149,7 +149,7 @@ export function CinematicCrawlPlayer({
         >
           <div className="crawl-perspective">
             <div
-              className="crawl-copy"
+              className={`crawl-copy ${startPosition === "top" ? "start-top" : ""}`}
               onAnimationEnd={() => {
                 setHasEnded(true);
                 if (!isPaused) {
