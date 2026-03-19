@@ -335,10 +335,6 @@ body {
   animation: crawl-rise var(--crawl-duration, 34s) linear forwards;
 }
 
-.crawl-copy.start-top {
-  transform-origin: 50% 0%;
-}
-
 .crawl-motion.is-paused .crawl-copy {
   animation-play-state: paused;
 }
